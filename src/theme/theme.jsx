@@ -3,21 +3,21 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#2C3A4F',
-      dark: '#56647b',
-      light: '#b4c2dc'
+      main: '#8B5FBF',
+      dark: '#61398F',
+      light: '##FFFFFF'
     },
     secondary: {
-      main: '#FF4D4D',
-      light: '#ffecda'
+      main: '#9A73B5',
+      light: '#D6C6E1'
     },
     text: {
-      primary: '#FFFFFF',
-      secondary: '#e0e0e0'
+      primary: '#4A4A4A',
+      secondary: '#878787'
     },
     background: {
-      default: '#1A1F2B',
-      paper: '#292e3b'
+      default: '#F5F3F7',
+      paper: '#E9E4ED',
     }
   },
   typography: {

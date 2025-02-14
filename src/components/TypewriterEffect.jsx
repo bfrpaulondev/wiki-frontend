@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const TypewriterEffect = ({ text, speed = 100 }) => {
   const [displayedText, setDisplayedText] = useState('');
   const [finished, setFinished] = useState(false);
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); 
   useEffect(() => {
     let index = 0;
     setFinished(false);
+    setDisplayedText(''); 
+
     const intervalId = setInterval(() => {
-      setDisplayedText(text.slice(0, index + 1));
+      setDisplayedText((prev) => prev + text.charAt(index));
       index++;
       if (index === text.length) {
         clearInterval(intervalId);
         setFinished(true);
       }
     }, speed);
+
     return () => clearInterval(intervalId);
   }, [text, speed]);
 
@@ -25,22 +32,23 @@ const TypewriterEffect = ({ text, speed = 100 }) => {
         fontFamily: 'monospace',
         display: 'inline-block',
         position: 'relative',
-        whiteSpace: 'pre',
+        whiteSpace: 'pre-wrap',
+        fontSize: isMobile ? '0.9rem' : '1.2rem', 
       }}
     >
       <Typography variant="subtitle1" component="span">
         {displayedText}
       </Typography>
+      {/* Cursor piscante */}
       {!finished && (
         <Box
           component="span"
           sx={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            height: '2px',
-            width: '100%',
+            display: 'inline-block',
+            width: '6px',
+            height: '1.2rem',
             backgroundColor: 'currentColor',
+            marginLeft: '2px',
             animation: 'blink 1s step-end infinite',
           }}
         />

@@ -14,15 +14,11 @@ const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-
-  // Buscar configurações do usuário via endpoint
   const [userSettings, setUserSettings] = useState(null);
-  // Seleciona uma frase motivacional do JSON local
   const [randomPhrase, setRandomPhrase] = useState('');
 
   useEffect(() => {
     if (token) {
-      // Buscar configurações do usuário
       axios.get(`https://wiki-api-glte.onrender.com/api/users/me/settings`, {
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -33,7 +29,6 @@ const Navbar = () => {
         console.error('Error fetching user settings:', error);
       });
 
-      // Seleciona uma frase aleatória do JSON
       if (motivationalPhrases && motivationalPhrases.length > 0) {
         const randomIndex = Math.floor(Math.random() * motivationalPhrases.length);
         setRandomPhrase(motivationalPhrases[randomIndex]);
@@ -44,9 +39,11 @@ const Navbar = () => {
   }, [token]);
 
   return (
-    <AppBar position="static" color="primary">
+    <AppBar sx={{
+      marginTop: 2
+    }} position="static" color="primary">
       <Toolbar>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex' , flexWrap:"wrap" , padding: "10px", alignItems: 'center' }}>
           <Typography variant="subtitle1" sx={{ mr: 1 }}>
             {`Hello, ${userSettings?.displayName || 'Developer'}!`}
           </Typography>
@@ -55,7 +52,6 @@ const Navbar = () => {
               <Lottie animationData={robotAnimation} loop={true} />
             </Box>
           )}
-          {/* Utiliza o componente TypewriterEffect para a frase */}
           <TypewriterEffect text={randomPhrase} speed={100} />
         </Box>
         <Box sx={{ flexGrow: 1 }} />

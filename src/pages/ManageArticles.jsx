@@ -28,14 +28,18 @@ import {
   deleteArticle,
 } from '../features/articles/articleApi';
 import { fetchSections } from '../features/sections/sectionApi';
-import ArticleEditor from '../components/ArticleEditor'; // Editor Markdown
+import ArticleEditor from '../components/ArticleEditor';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const ManageArticles = () => {
+  
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const token = useSelector((state) => state.auth.token);
   const queryClient = useQueryClient();
-  // Inicializa com defaultValues para garantir que 'tags' e 'content' sejam controlados
   const { register, handleSubmit, reset, setValue, watch } = useForm({
     defaultValues: { tags: [], content: '' },
   });
@@ -43,7 +47,6 @@ const ManageArticles = () => {
 
   const [selectedArticle, setSelectedArticle] = useState(null);
 
-  // Estados para modais de revisões e histórico
   const [revisionsOpen, setRevisionsOpen] = useState(false);
   const [revisions, setRevisions] = useState([]);
   const [currentArticleForRevisions, setCurrentArticleForRevisions] = useState(null);
@@ -52,7 +55,6 @@ const ManageArticles = () => {
   const [historyData, setHistoryData] = useState([]);
   const [currentArticleForHistory, setCurrentArticleForHistory] = useState(null);
 
-  // 1. Carregar artigos
   const { data: articles, isLoading: isLoadingArticles, error: articlesError } = useQuery('articles', async () => {
     const response = await axios.get(`${API_BASE_URL}/articles`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -60,7 +62,6 @@ const ManageArticles = () => {
     return response.data;
   });
 
-  // 2. Carregar seções
   const { data: sections, isLoading: isLoadingSections, error: sectionsError } = useQuery('sections', async () => {
     const response = await axios.get(`${API_BASE_URL}/sections`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -68,7 +69,6 @@ const ManageArticles = () => {
     return response.data;
   });
 
-  // 2.1. Carregar tags existentes (para seleção)
   const { data: allTags, isLoading: isLoadingTags, error: tagsError } = useQuery('allTags', async () => {
     const response = await axios.get(`${API_BASE_URL}/tags`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -76,7 +76,6 @@ const ManageArticles = () => {
     return response.data;
   });
 
-  // 3. CRUD de Artigos
   const createMutation = useMutation(
     (data) => createArticle(data, token),
     {
@@ -119,7 +118,6 @@ const ManageArticles = () => {
     }
   );
 
-  // 4. Salvar artigo como rascunho (POST /articles/{id}/draft)
   const draftMutation = useMutation(
     async (id) => {
       const response = await axios.post(`${API_BASE_URL}/articles/${id}/draft`, {}, {
@@ -138,7 +136,6 @@ const ManageArticles = () => {
     }
   );
 
-  // 5. Publicar artigo (PUT /articles/{id}/publish)
   const publishMutation = useMutation(
     async (id) => {
       const response = await axios.put(`${API_BASE_URL}/articles/${id}/publish`, {}, {
@@ -157,7 +154,6 @@ const ManageArticles = () => {
     }
   );
 
-  // 6. Revisões – Listar e Restaurar versão antiga
   const fetchRevisions = async (articleId) => {
     const response = await axios.get(`${API_BASE_URL}/articles/${articleId}/revisions`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -184,7 +180,6 @@ const ManageArticles = () => {
     }
   );
 
-  // 8. Histórico de alterações
   const fetchHistory = async (articleId) => {
     const response = await axios.get(`${API_BASE_URL}/history/${articleId}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -199,13 +194,12 @@ const ManageArticles = () => {
     return response.data;
   };
 
-  // Funções de ação
   const onSubmit = (data) => {
     const payload = {
       title: data.title,
-      content: data.content, // Conteúdo em Markdown
+      content: data.content, 
       section: data.sectionId,
-      tags: data.tags, // Array de IDs das tags
+      tags: data.tags, 
     };
 
     if (selectedArticle) {
@@ -272,15 +266,13 @@ const ManageArticles = () => {
   if (articlesError) return <Typography>Error loading articles</Typography>;
   if (sectionsError) return <Typography>Error loading sections</Typography>;
   if (tagsError) return <Typography>Error loading tags</Typography>;
-
   return (
-    <Box sx={{ mt: 3, p: 2 }}>
-      <Typography variant="h4" gutterBottom>
-        Manage Articles
+    <Box sx={{ mt: 3, px: isMobile ? 2 : 4, maxWidth: '1200px', mx: 'auto' }}>
+      <Typography variant={isMobile ? 'h5' : 'h4'} gutterBottom>
+      Manage Articles
       </Typography>
 
-      {/* Formulário de Criação/Edição */}
-      <Paper sx={{ p: 3, mb: 3 }}>
+      <Paper sx={{ p: isMobile ? 2 : 3, mb: 3 }}>
         <Typography variant="h6" gutterBottom>
           {selectedArticle ? 'Edit Article' : 'Create New Article'}
         </Typography>
@@ -291,7 +283,6 @@ const ManageArticles = () => {
             margin="normal"
             {...register('title', { required: 'Title is required' })}
           />
-          {/* Editor de Markdown para Content */}
           <Box sx={{ mt: 2 }}>
             <Typography variant="subtitle1" gutterBottom>
               Content
@@ -314,13 +305,12 @@ const ManageArticles = () => {
               </MenuItem>
             ))}
           </TextField>
-          {/* Campo para selecionar as tags */}
           <TextField
             select
             label="Tags"
             fullWidth
             margin="normal"
-            defaultValue={[]} // Valor inicial como array vazio
+            defaultValue={[]}
             {...register('tags', { required: 'At least one tag is required' })}
             SelectProps={{
               multiple: true,
@@ -357,11 +347,10 @@ const ManageArticles = () => {
         </form>
       </Paper>
 
-      {/* Seção de Ações Extras para cada Artigo */}
       <Typography variant="h5" gutterBottom>
         Article Actions
       </Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={isMobile ? 1 : 2}>
         {articles?.map((article) => (
           <Grid item xs={12} sm={6} md={4} key={article._id}>
             <Paper sx={{ p: 2 }}>
@@ -375,7 +364,7 @@ const ManageArticles = () => {
               <Typography variant="caption">
                 Tags: {article.tags.join(', ')}
               </Typography>
-              <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Box sx={{ mt: 2, display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 1 }}>
                 <Button variant="outlined" onClick={() => handleEdit(article)}>
                   Edit
                 </Button>
@@ -400,7 +389,6 @@ const ManageArticles = () => {
         ))}
       </Grid>
 
-      {/* Modal: Revisões */}
       <Dialog open={revisionsOpen} onClose={() => setRevisionsOpen(false)} fullWidth>
         <DialogTitle>
           Revisions for {currentArticleForRevisions?.title}

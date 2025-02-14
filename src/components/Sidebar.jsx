@@ -5,11 +5,14 @@ import { useNavigate } from 'react-router-dom';
 const Sidebar = () => {
   const navigate = useNavigate();
   const drawerWidth = 240;
-
   const menuItems = [
     { text: 'Home', path: '/' },
+    { text: 'Manage Articles', path: '/manage-articles' },
     { text: 'Profile', path: '/profile' },
-    { text: 'Notifications', path: '/notifications' }
+    { text: 'Notifications', path: '/notifications' },
+    { text: 'Sections', path: '/sections' },
+    { text: 'Stats', path: '/stats' },
+    { text: 'Tags', path: '/tags' }
   ];
 
   return (

@@ -13,7 +13,7 @@ const Home = () => {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom m={4}>
         Latest Articles
       </Typography>
       <Grid container spacing={2}>

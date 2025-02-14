@@ -3,7 +3,8 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../features/auth/authApi';
 import { loginSuccess } from '../features/auth/authSlice';
-import { useNavigate } from 'react-router-dom';
+// Removemos o uso do navigate ou comentamos a chamada de navegação automática
+// import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, CircularProgress, Paper } from '@mui/material';
 import { toast } from 'react-toastify';
 
@@ -11,7 +12,7 @@ const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -21,7 +22,8 @@ const Login = () => {
       if (response && response.token) {
         dispatch(loginSuccess(response));
         toast.success('Login successful!');
-        navigate('/');
+        // Navegação removida para evitar redirecionamento automático
+        // navigate('/');
       } else {
         toast.error('Login failed: Invalid response');
       }
@@ -32,7 +34,6 @@ const Login = () => {
       setLoading(false);
     }
   };
-  
 
   return (
     <Paper elevation={3} sx={{ maxWidth: 400, mx: 'auto', mt: 8, p: 3, backgroundColor: 'background.paper' }}>

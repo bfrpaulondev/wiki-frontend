@@ -4,12 +4,11 @@ import { useNavigate } from 'react-router-dom';
 
 const ArticleCard = ({ article }) => {
   const navigate = useNavigate();
-
   return (
     <Card sx={{ margin: 2 }}>
       <CardActionArea onClick={() => navigate(`/articles/${article._id}`)}>
         <CardContent>
-          <Typography variant="h5" component="div">
+          <Typography variant="h5">
             {article.title}
           </Typography>
           <Typography variant="body2" color="text.secondary">

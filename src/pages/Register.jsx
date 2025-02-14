@@ -12,7 +12,6 @@ const Register = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    console.log('Register data:', data); // Debug log
     setLoading(true);
     try {
       const response = await registerUser(data);
@@ -68,6 +67,9 @@ const Register = () => {
         >
           {loading ? <CircularProgress size={24} color="inherit" /> : 'Register'}
         </Button>
+        <Box mt={3} textAlign="center" >
+          Already have an account? <Button onClick={() => navigate('/login')}>Login</Button>
+        </Box>
       </form>
     </Paper>
   );

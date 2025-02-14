@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../features/auth/authApi';
 import { loginSuccess } from '../features/auth/authSlice';
-// Removemos o uso do navigate ou comentamos a chamada de navegação automática
-// import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Typography, CircularProgress, Paper } from '@mui/material';
+import { TextField, Button, Typography, CircularProgress, Paper } from '@mui/material';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -22,8 +21,7 @@ const Login = () => {
       if (response && response.token) {
         dispatch(loginSuccess(response));
         toast.success('Login successful!');
-        // Navegação removida para evitar redirecionamento automático
-        // navigate('/');
+        navigate('/');
       } else {
         toast.error('Login failed: Invalid response');
       }
@@ -67,6 +65,17 @@ const Login = () => {
           disabled={loading}
         >
           {loading ? <CircularProgress size={24} color="inherit" /> : 'Login'}
+        </Button>
+        <Button
+          fullWidth sx={{ mt: 2 }}
+          disabled={loading}
+          variant="contained"
+          color="primary"
+          onClick={() => navigate('/register')}
+
+        >
+          {loading ? <CircularProgress size={24} color="inherit" /> : 'Register'}
+
         </Button>
       </form>
     </Paper>

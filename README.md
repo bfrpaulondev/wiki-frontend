@@ -1,5 +1,5 @@
 
-`# Wiki Frontend
+# Wiki Frontend
 
 This is a modern frontend for the Wiki API built with React (Vite) and Material UI. It uses Redux Toolkit for state management, React Query for data fetching, and React Router for navigation.
 
